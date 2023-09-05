@@ -44,7 +44,7 @@ ON #Temp
 );
 
 /*
-2500 reads, well that's a whole lot better than 5,700 reads
+2,500 reads, well that's a whole lot better than 5,700 reads
 But you will note we are doing a key lookup here, 
 SQL didn't tell us to do anything with reputation
 (this is they folks in the business call foreshadowing)
@@ -59,9 +59,9 @@ WHERE DisplayName = 'Alex'
 ORDER BY Reputation;
 
 /*
-To be fair, if you read the documentation 
-	Microsoft has a long list of disclaimers about missing index recommendations 
-	including that key columns are not in any order.
+To be fair, if you read the documentation,
+	Microsoft has a long list of disclaimers about missing index recommendations, 
+	including that key columns are not in any order and the suggestion is based around only the esimates used for the query plan.
 	https://learn.microsoft.com/en-us/sql/relational-databases/indexes/tune-nonclustered-missing-index-suggestions?view=sql-server-ver16
 */
 
@@ -70,7 +70,7 @@ To be fair, if you read the documentation
 
 DROP INDEX IF EXISTS JMR ON #Temp
 
-CREATE INDEX JMR ON #Temp (DisplayName, NotSelective, Reputation);
+CREATE INDEX JMR ON #Temp (NotSelective, DisplayName, Reputation);
 
 
 /*
@@ -125,8 +125,7 @@ ORDER BY Reputation;
 /*
 Takeaway
 
-Missing index recommendations may not be perfect.
-Microsoft says user beware all the limitations on these recs.
-It is possible to add a recommended index but SQL decides to not use it and keep recommending the index 
+Missing index recommendations may not be ideal or even used in the query.
+It is possible to add a recommended index but SQL decides to not use it but keeps recommending the index 
 	(no I don't have an example today but I did see the same index 7 times on a table once)
 */

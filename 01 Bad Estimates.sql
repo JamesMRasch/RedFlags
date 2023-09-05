@@ -63,6 +63,7 @@ SELECT 6.142506E-05 * 299398.0 -- 18.4
 /* 
 What happens with a literal value?
 SQL decides to do a CI scan here because SQL has actual statistics for Reputation  = 1 and our estimates are dead on.
+Doing 7,400 reads is better than 122,000.
 */
 SELECT u.id, u.DisplayName, u.LastAccessDate, u.CreationDate, u.Reputation, u.Views
 FROM dbo.Users AS u
@@ -88,25 +89,10 @@ Why could that be?
 
 People with a Reputation of 1 probably haven't done much to make people want to view their accounts
 	but SQL doesn't know that. 
-We get the same percentage estimate for other reputations looking at Views > 20
-	but those wind up being much closer to the actual records.
 */
 
-SELECT u.id, u.DisplayName, u.LastAccessDate, u.CreationDate, u.Reputation, u.Views
-FROM dbo.Users AS u
-WHERE u.Reputation = 10 --536
-	AND u.Views > 20
-ORDER BY u.LastAccessDate DESC;
-
-
-SELECT u.id, u.DisplayName, u.LastAccessDate, u.CreationDate, u.Reputation, u.Views
-FROM dbo.Users AS u
-WHERE u.Reputation = 20 --637
-	AND u.Views > 20
-ORDER BY u.LastAccessDate DESC;
-
 /*
-How SQL Server gets estimates on multi column queries is pretty complicated but this link covers it.
+How SQL Server comes up with multi column statistics is pretty complicated but this link covers it.
 https://techcommunity.microsoft.com/t5/sql-server-support-blog/multi-column-statistics/ba-p/3667253
 
 This example doesn't have a solution where we magically get better statistics for it
@@ -157,14 +143,14 @@ FROM #users AS u
 ORDER BY u.LastAccessDate DESC;
 
 /*
-Well, 70,000 reads is a whole lot better than 810,000 and it's much faster.
+Well, 22,000 reads is a whole lot better than 810,000 and it's much faster.
 */
 
 
 /*
 Takeaways
 	Local variables can have bad estimates when the value passed in doesn't conform to the norm for the table.
-	Sometimes you get bad estimates, inequality predictes make things worse.
+	Sometimes you get bad estimates, inequality predicates make things worse.
 	Bad estimates can mess up all the estimates downstream of them.
 	Breaking queries up by dumping steps with bad estimates into temp tables can improve downstream estimates.
 

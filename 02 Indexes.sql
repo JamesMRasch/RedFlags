@@ -47,6 +47,7 @@ WHERE u.AccountId = 1;
 /* Until proven otherwise, not having index on fields you could be seeking regularly into is a red flag */
 
 
+/* Residual Predicates */
 
 /* 
 Whenever SQL has to do a key lookup to get data to filter based on a where clause,
@@ -118,15 +119,10 @@ WHERE u.Reputation = 1
 	AND u.Views > 20
 ORDER BY u.LastAccessDate DESC;
 GO
-	
 
-/* Just to prove the bad estimate is giving us a different plan, I'll hint a seek here */	
-/* 1,900 reads is definitely less that 7,400 */
-SELECT u.id, u.DisplayName, u.LastAccessDate, u.CreationDate, u.Reputation, u.Views
-FROM dbo.Users AS u WITH (FORCESEEK)
-WHERE u.Reputation = 1
-	AND u.Views > 20
-ORDER BY u.LastAccessDate DESC;
+
+
+/* Key column ordering really does matter */
 
 /* 
 Surely having all the columns in you index is all you need to make queries efficient, right?

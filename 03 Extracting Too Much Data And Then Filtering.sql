@@ -156,3 +156,9 @@ EXEC dbo.StoGetUserPostInfoLimited @OwnerUserId = 39677; -- 18 reads instead of 
 EXEC dbo.StoGetUserPostInfoLimited @OwnerUserId = 0; --around 1,000 reads instead of 1M
 
 
+/*
+Takeaway
+
+Filter data as early as possible
+
+*/

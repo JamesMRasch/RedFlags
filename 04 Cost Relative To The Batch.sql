@@ -58,7 +58,6 @@ If you're looking for bad performance, rely on other means.
 
 * Looking at logical reads and CPU steps of queries.
 * Learning how the operators work
-* Try using SQL Sentry Plan Explorer.
 
 
 */
